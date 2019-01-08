@@ -1,35 +1,49 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2012                    */
-/* Created on:     1/7/2019 5:48:55 PM                          */
+/* Created on:     1/8/2019 2:59:48 PM                          */
 /*==============================================================*/
 
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('course') and o.name = 'FK_COURSE_COURSE&CO_COLLEGE')
+   where r.fkeyid = object_id('course') and o.name = 'FK_COURSE_COURSECOL_COLLEGE')
 alter table course
-   drop constraint FK_COURSE_COURSE&CO_COLLEGE
+   drop constraint FK_COURSE_COURSECOL_COLLEGE
 go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('course') and o.name = 'FK_COURSE_COURSE&TE_TEACHER')
+   where r.fkeyid = object_id('course') and o.name = 'FK_COURSE_COURSETEA_TEACHER')
 alter table course
-   drop constraint FK_COURSE_COURSE&TE_TEACHER
+   drop constraint FK_COURSE_COURSETEA_TEACHER
 go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('student') and o.name = 'FK_STUDENT_STUDENT&C_COLLEGE')
+   where r.fkeyid = object_id('selectedcourse') and o.name = 'FK_SELECTED_SELECTEDC_COURSE')
+alter table selectedcourse
+   drop constraint FK_SELECTED_SELECTEDC_COURSE
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('selectedcourse') and o.name = 'FK_SELECTED_SELECTEDC_STUDENT')
+alter table selectedcourse
+   drop constraint FK_SELECTED_SELECTEDC_STUDENT
+go
+
+if exists (select 1
+   from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
+   where r.fkeyid = object_id('student') and o.name = 'FK_STUDENT_STUDENTCO_COLLEGE')
 alter table student
-   drop constraint FK_STUDENT_STUDENT&C_COLLEGE
+   drop constraint FK_STUDENT_STUDENTCO_COLLEGE
 go
 
 if exists (select 1
    from sys.sysreferences r join sys.sysobjects o on (o.id = r.constid and o.type = 'F')
-   where r.fkeyid = object_id('teacher') and o.name = 'FK_TEACHER_TEACHER&C_COLLEGE')
+   where r.fkeyid = object_id('teacher') and o.name = 'FK_TEACHER_TEACHERCO_COLLEGE')
 alter table teacher
-   drop constraint FK_TEACHER_TEACHER&C_COLLEGE
+   drop constraint FK_TEACHER_TEACHERCO_COLLEGE
 go
 
 if exists (select 1
@@ -62,6 +76,13 @@ go
 
 if exists (select 1
             from  sysobjects
+           where  id = object_id('selectedcourse')
+            and   type = 'U')
+   drop table selectedcourse
+go
+
+if exists (select 1
+            from  sysobjects
            where  id = object_id('student')
             and   type = 'U')
    drop table student
@@ -85,7 +106,7 @@ go
 /* Table: college                                               */
 /*==============================================================*/
 create table college (
-   collegeID            int(11)              not null,
+   collegeID            int                  not null,
    collegeName          varchar(200)         not null,
    constraint PK_COLLEGE primary key (collegeID)
 )
@@ -95,16 +116,16 @@ go
 /* Table: course                                                */
 /*==============================================================*/
 create table course (
-   courseID             int(11)              not null,
+   courseID             int                  not null,
    courseName           varchar(200)         not null,
-   teacherID            int(11)              not null,
-   collegeID            int(11)              not null,
+   teacherID            int                  not null,
+   collegeID            int                  not null,
    courseTIme           varchar(200)         null default null,
    classRoom            varchar(200)         null default null,
-   courseWeek           int(200)             null default null,
+   courseWeek           int                  null default null,
    courseType           varchar(20)          null default null,
-   score                int(11)              null,
-   constraint PK_COURSE primary key (courseID, teacherID, collegeID)
+   score                int                  null,
+   constraint PK_COURSE primary key (courseID)
 )
 go
 
@@ -112,7 +133,7 @@ go
 /* Table: role                                                  */
 /*==============================================================*/
 create table role (
-   roleID               int(11)              not null,
+   roleID               int                  not null,
    roleName             varchar(20)          not null,
    permissions          varchar(255)         null default null,
    constraint PK_ROLE primary key (roleID)
@@ -120,16 +141,27 @@ create table role (
 go
 
 /*==============================================================*/
+/* Table: selectedcourse                                        */
+/*==============================================================*/
+create table selectedcourse (
+   courseID             int                  not null,
+   studentID            int                  not null,
+   mark                 int                  null default null,
+   constraint PK_SELECTEDCOURSE primary key (courseID, studentID)
+)
+go
+
+/*==============================================================*/
 /* Table: student                                               */
 /*==============================================================*/
 create table student (
-   userID               int(11)              not null,
+   userID               int                  not null,
    userName             varchar(200)         not null,
    sex                  varchar(20)          null default null,
    birthYear            date                 null default null,
    grade                date                 null default null,
-   collegeID            int(11)              not null,
-   constraint PK_STUDENT primary key (userID, collegeID)
+   collegeID            int                  not null,
+   constraint PK_STUDENT primary key (userID)
 )
 go
 
@@ -137,15 +169,15 @@ go
 /* Table: teacher                                               */
 /*==============================================================*/
 create table teacher (
-   userID               int(11)              not null,
+   userID               int                  not null,
    userName             varchar(200)         not null,
    sex                  varchar(20)          null default null,
    birthYear            date                 not null,
    degree               varchar(20)          null default null,
    title                varchar(255)         null default null,
    grade                date                 null default null,
-   collegeID            int(11)              not null,
-   constraint PK_TEACHER primary key (userID, collegeID)
+   collegeID            int                  not null,
+   constraint PK_TEACHER primary key (userID)
 )
 go
 
@@ -153,31 +185,41 @@ go
 /* Table: userlogin                                             */
 /*==============================================================*/
 create table userlogin (
-   userID               int(11)              not null,
+   userID               int                  not null,
    userName             varchar(200)         not null,
    password             varchar(200)         not null,
-   role                 int(11)              not null,
+   role                 int                  not null,
    constraint PK_USERLOGIN primary key (userID, role)
 )
 go
 
 alter table course
-   add constraint FK_COURSE_COURSE&CO_COLLEGE foreign key (collegeID)
+   add constraint FK_COURSE_COURSECOL_COLLEGE foreign key (collegeID)
       references college (collegeID)
 go
 
 alter table course
-   add constraint FK_COURSE_COURSE&TE_TEACHER foreign key (teacherID)
+   add constraint FK_COURSE_COURSETEA_TEACHER foreign key (teacherID)
       references teacher (userID)
 go
 
+alter table selectedcourse
+   add constraint FK_SELECTED_SELECTEDC_COURSE foreign key (courseID)
+      references course (courseID)
+go
+
+alter table selectedcourse
+   add constraint FK_SELECTED_SELECTEDC_STUDENT foreign key (studentID)
+      references student (userID)
+go
+
 alter table student
-   add constraint FK_STUDENT_STUDENT&C_COLLEGE foreign key (collegeID)
+   add constraint FK_STUDENT_STUDENTCO_COLLEGE foreign key (collegeID)
       references college (collegeID)
 go
 
 alter table teacher
-   add constraint FK_TEACHER_TEACHER&C_COLLEGE foreign key (collegeID)
+   add constraint FK_TEACHER_TEACHERCO_COLLEGE foreign key (collegeID)
       references college (collegeID)
 go
 
