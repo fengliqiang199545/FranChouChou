@@ -12,10 +12,6 @@
       <param-value>classpath*:spring</param-value>
   </context-param>
 
-  <!--配置context配置文件的加载监听器-->
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
 
 
 
