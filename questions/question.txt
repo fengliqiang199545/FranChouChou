@@ -1,0 +1,4 @@
+1.为什么mybatis没有创建interface mapper？ 解决：目标路径多了个空格
+2.custom是mybatis自己产生的？还是自己人为编写的？
+3.如何实现的翻页功能？
+4.spring 如何整合 log4j？？？
