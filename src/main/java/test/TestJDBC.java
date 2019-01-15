@@ -10,7 +10,7 @@ import static java.sql.DriverManager.getConnection;
 public class TestJDBC {
 
     public static void main(String[] args) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("test/db");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("src/test/db");
 
         //driver
         String driver = resourceBundle.getString("jdbc.driver");

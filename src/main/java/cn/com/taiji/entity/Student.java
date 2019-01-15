@@ -200,4 +200,16 @@ public class Student {
     public void setCollegeid(Integer collegeid) {
         this.collegeid = collegeid;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "userid=" + userid +
+                ", username='" + username + '\'' +
+                ", sex='" + sex + '\'' +
+                ", birthyear=" + birthyear +
+                ", grade=" + grade +
+                ", collegeid=" + collegeid +
+                '}';
+    }
 }

@@ -66,4 +66,12 @@ public class Userlogin extends UserloginKey {
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Userlogin{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

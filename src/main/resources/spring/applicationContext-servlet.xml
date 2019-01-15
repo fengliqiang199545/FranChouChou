@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 加载静态资源 -->
+    <mvc:default-servlet-handler/>
+
+    <!--开启注解方式驱动-->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+
+    <!--自定义参数绑定组件-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!-- 配置转换器 -->
+        <property name="converters">
+            <set>
+                <!-- 日期类型的转换 -->
+                <bean class="cn.com.taiji.controller.converter.CustomDateConverter"/>
+            </set>
+        </property>
+
+    </bean>
+
+    <!--配置组件扫描器，这里只需要扫描controller-->
+    <context:component-scan base-package="cn.com.taiji.controller"/>
+
+    <!--全局错误信息处理器
+    只要实现HandlerExceptionResolver接口就是全局异常处理器
+    -->
+    <bean class="cn.com.taiji.exception.CustomExceptionResolver"/>
+
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 
 
 </beans>
