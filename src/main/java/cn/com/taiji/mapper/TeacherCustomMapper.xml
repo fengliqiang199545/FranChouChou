@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.com.taiji.mapper.TeacherCustomMapper">
+    <!-- teacher findByPaging 的实现-->
+    <select id="findByPaging" parameterType="PagingVO" resultType="TeacherCustom">
+        select teacher.*,college.collegeName
+        from teacher,college
+        where teacher.collegeID = college.collegeID
+        order by userid
+        offset #{toPageNo} rows
+        fetch next #{pageSize} rows only
+    </select>
+</mapper>
