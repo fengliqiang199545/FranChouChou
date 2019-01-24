@@ -198,6 +198,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
+  <select id="maxUserid" resultType="java.lang.Integer">
+        select max (userid) + 1
+        from userlogin
+    </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     <!--
       WARNING - @mbg.generated
@@ -230,7 +236,7 @@
       This element was generated on Wed Jan 09 11:47:48 CST 2019.
     -->
     update userlogin
-    set userID = #{record.userid,jdbcType=INTEGER},
+    set
       role = #{record.role,jdbcType=INTEGER},
       userName = #{record.username,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR}

@@ -94,4 +94,8 @@ public interface UserloginMapper {
      * @mbg.generated Wed Jan 09 11:47:48 CST 2019
      */
     int updateByPrimaryKey(Userlogin record);
+
+
+    //找到userid的最大值
+    Integer maxUserid() throws Exception;
 }

@@ -7,6 +7,11 @@
     <!--配置组件扫描器，扫描reaml-->
     <context:component-scan base-package="cn.com.taiji.realm"/>
 
+    <bean id="realm" class="cn.com.taiji.realm.LoginRealm">
+        <property name="authenticationCachingEnabled" value="false"/>
+        <property name="cachingEnabled" value="true"/>
+    </bean>
+
     <!-- 配置shiro过滤器bean，id要和web.xml中filter-name一致 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
@@ -45,7 +50,8 @@
     <!-- 配置securityManage-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <!--配置自定义的realm-->
-        <property name="realm" ref="loginRealm"/>
+        <property name="realm" ref="realm"/>
+
     </bean>
 
     <!--配置生命周期-->
